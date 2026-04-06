@@ -1,21 +1,21 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   application:
     name: talis-dictionary
 
   thymeleaf:
-    prefix: classpath:/templates/
+    prefix: classpath:/classpath:/templates/
     suffix: .html
     cache: false
     mode: HTML
     encoding: UTF-8
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/talislingua_db
-    username: postgres
-    password: rasif1103!
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -38,6 +38,7 @@ springdoc:
     enabled: true
   api-docs:
     path: /v3/api-docs
+    enabled: true
 
 unsplash:
   access-key: "L2nkNANBwps0OHTcVOkmwC5pTWO7q9ok_atwDg2v8Pw"
