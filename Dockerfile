@@ -1,10 +1,10 @@
-# 1. Build mərhələsi (Maven istifadə edərək .jar faylını yaradırıq)
-FROM maven:3.8.5-openjdk-17 AS build
+# 1. Build mərhələsi (Gradle istifadə edərək .jar faylını yaradırıq)
+FROM gradle:7.6-jdk17 AS build
 COPY . .
-RUN mvn clean package -DskipTests
+RUN gradle clean bootJar --no-daemon
 
-# 2. Run mərhələsi (Yaranmış faylı işə salırıq)
+# 2. Run mərhələsi
 FROM eclipse-temurin:17-jdk-jammy
-COPY --from=build /target/*.jar app.jar
+COPY --from=build /home/gradle/project/build/libs/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
