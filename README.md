@@ -1,5 +1,5 @@
 🌍 TalisLingua - Dictionary Microservice
-TalisLingua, fərqli dillərdə sözləri və onların tərcümələrini idarə edən, Java Spring Boot əsaslı müasir bir lüğət backend xidmətidir. Bu layihə həm fərdi lüğət yaratmaq, həm də dil öyrənmə proqramları üçün stabil infrastruktur təmin etmək məqsədilə qurulub.
+TalisLingua, Hazırda üzərində çalışdığım Talislingua Pro layihəsi rəqəmsal dünyada ana dilimizin — Talış dilinin qorunması və öyrənilməsi üçün nəzərdə tutulub, Java Spring Boot əsaslı müasir bir lüğət backend xidmətidir. Bu layihə həm fərdi lüğət yaratmaq, həm də dil öyrənmə proqramları üçün stabil infrastruktur təmin etmək məqsədilə qurulub.
 
 🚀 Texnoloji Stack
 Layihə müasir backend standartlarına uyğun olaraq aşağıdakı texnologiyalarla hazırlanıb:
