@@ -1,14 +1,10 @@
-# Java 17 mühiti
+# 1. Build mərhələsi (Maven istifadə edərək .jar faylını yaradırıq)
+FROM maven:3.8.5-openjdk-17 AS build
+COPY . .
+RUN mvn clean package -DskipTests
+
+# 2. Run mərhələsi (Yaranmış faylı işə salırıq)
 FROM eclipse-temurin:17-jdk-jammy
-
-# İşçi qovluğunu təyin et
-WORKDIR /app
-
-# Maven build nəticəsində yaranan .jar faylını konteynerə köçür
-COPY target/*.jar app.jar
-
-# Portu aç
+COPY --from=build /target/*.jar app.jar
 EXPOSE 8080
-
-# Tətbiqi başlat
 ENTRYPOINT ["java", "-jar", "app.jar"]
