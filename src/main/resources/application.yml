@@ -6,17 +6,18 @@ spring:
     name: talis-dictionary
 
   thymeleaf:
-    prefix: classpath:/templates/   # FIX edildi ❗
+    prefix: classpath:/templates/
     suffix: .html
     cache: false
     mode: HTML
     encoding: UTF-8
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:testdb}   # fallback əlavə edildi 🔥
-    username: ${SPRING_DATASOURCE_USERNAME:sa}
-    password: ${SPRING_DATASOURCE_PASSWORD:}
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+    # Docker-də işləyəndə SPRING_DATASOURCE_URL mühit dəyişəni 'db' hostuna baxmalıdır
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/talislingua_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:rasif1103!}
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
@@ -25,10 +26,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-  h2:
-    console:
-      enabled: true
+        # Dialekti avtomatik təyin etməsi üçün bunu silə də bilərsən, amma qalsa da ziyanı yoxdur
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
   servlet:
     multipart:
@@ -41,8 +40,8 @@ springdoc:
     enabled: true
   api-docs:
     path: /v3/api-docs
-    enabled: true
 
+# Əlavə etdiyimiz Unsplash bölməsi
 unsplash:
-  access-key: "L2nkNANBwps0OHTcVOkmwC5pTWO7q9ok_atwDg2v8Pw"
+  access-key: ${UNSPLASH_ACCESS_KEY:L2nkNANBwps0OHTcVOkmwC5pTWO7q9ok_atwDg2v8Pw}
   api-url: https://api.unsplash.com/search/photos
