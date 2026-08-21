@@ -14,18 +14,14 @@ import java.util.Optional;
 @Repository
 public interface WordRepository extends JpaRepository<Word, Long> {
 
-    // 1. Axtarış üçün (Böyük-kiçik hərf fərqi olmadan)
     @Query("SELECT w FROM Word w WHERE w.azTranslation ILIKE %:word% OR w.talisWord ILIKE %:word%")
     List<Word> findByWordIgnoreCase(@Param("word") String word);
 
-    // 2. Hazırkı günün sözünü tapmaq üçün
     Optional<Word> findByIsOfDayTrue();
 
-    // 3. Bazadan təsadüfi bir söz gətirmək üçün (PostgreSQL üçün native query)
-    @Query(value = "SELECT * FROM word ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM word OFFSET FLOOR(RANDOM() * (SELECT COUNT(*) FROM word)) LIMIT 1", nativeQuery = true)
     Word findRandomWord();
 
-    // 4. Bütün isOfDay sahələrini false etmək (Hər yeni gün seçiləndə köhnəni sıfırlamaq üçün)
     @Modifying
     @Transactional
     @Query("UPDATE Word w SET w.isOfDay = false")

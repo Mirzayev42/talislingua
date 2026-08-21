@@ -18,7 +18,7 @@ public class Word {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Builder.Default
     private Boolean isOfDay = false;
 
     @Column(nullable = false)
@@ -33,5 +33,6 @@ public class Word {
     @Column(length = 1000)
     private String imageUrl;
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }

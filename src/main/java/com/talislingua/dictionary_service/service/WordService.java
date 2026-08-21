@@ -1,5 +1,6 @@
 package com.talislingua.dictionary_service.service;
 
+import com.talislingua.dictionary_service.dto.UnsplashResponse;
 import com.talislingua.dictionary_service.dto.WordRequest;
 import com.talislingua.dictionary_service.mapper.WordMapper;
 import com.talislingua.dictionary_service.model.Word;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class WordService {
 
     private final WordRepository wordRepository;
     private final WordMapper wordMapper;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     @Value("${unsplash.access-key}")
     private String unsplashAccessKey;
@@ -40,17 +41,13 @@ public class WordService {
             String url = String.format("https://api.unsplash.com/search/photos?query=%s&client_id=%s&per_page=1",
                     queryWord, unsplashAccessKey);
 
-            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+            UnsplashResponse response = restTemplate.getForObject(url, UnsplashResponse.class);
 
-            if (response != null && response.get("results") != null) {
-                List<Map<String, Object>> results = (List<Map<String, Object>>) response.get("results");
-
-                if (!results.isEmpty()) {
-                    Map<String, String> urls = (Map<String, String>) results.get(0).get("urls");
-                    word.setImageUrl(urls.get("regular"));
-                } else {
-                    word.setImageUrl("https://via.placeholder.com/1024?text=" + azWord);
-                }
+            if (response != null && response.getResults() != null && !response.getResults().isEmpty()) {
+                String regularUrl = response.getResults().get(0).getUrls().get("regular");
+                word.setImageUrl(regularUrl);
+            } else {
+                word.setImageUrl("https://via.placeholder.com/1024?text=" + azWord);
             }
         } catch (Exception e) {
             log.error("Unsplash xətası: {}", e.getMessage());
@@ -71,19 +68,13 @@ public class WordService {
 
     // --- GÜNÜN SÖZÜ ÖZƏLLİYİ ---
 
-    /**
-     * Hər gecə saat 00:00-da işləyir.
-     * Əvvəlcə köhnə günün sözünü sıfırlayır, sonra təsadüfi birini seçir.
-     */
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void updateWordOfDay() {
         log.info("Günün sözü yenilənməyə başladı...");
-
         wordRepository.resetWordOfDay();
 
         Word randomWord = wordRepository.findRandomWord();
-
         if (randomWord != null) {
             randomWord.setIsOfDay(true);
             wordRepository.save(randomWord);
@@ -91,19 +82,14 @@ public class WordService {
         }
     }
 
-    /**
-     * Ana səhifə üçün günün sözünü gətirir.
-     */
+
+    @Transactional(readOnly = true)
     public Word getWordOfDay() {
-        return wordRepository.findByIsOfDayTrue()
-                .orElseGet(() -> {
-                    log.warn("Günün sözü tapılmadı, təsadüfi biri təyin edilir.");
-                    Word firstWord = wordRepository.findRandomWord();
-                    if (firstWord != null) {
-                        firstWord.setIsOfDay(true);
-                        wordRepository.save(firstWord);
-                    }
-                    return firstWord;
-                });
+        List<Word> allWords = wordRepository.findAll();
+        if (allWords.isEmpty()) {
+            return null;
+        }
+        int randomIndex = new Random().nextInt(allWords.size());
+        return allWords.get(randomIndex);
     }
 }

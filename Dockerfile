@@ -1,11 +1,14 @@
-# OpenJDK yerinə Amazon-un rəsmi və stabil Java imicini istifadə edirik
-FROM amazoncorretto:17-alpine-jdk
+# Java 17 mühiti
+FROM openjdk:17-jdk-slim
 
+# İşçi qovluğunu təyin et
 WORKDIR /app
 
-# Gradle build-dən çıxan JAR faylını kopyalayırıq
-COPY build/libs/*.jar app.jar
+# Maven build nəticəsində yaranan .jar faylını konteynerə köçür
+COPY target/*.jar app.jar
 
+# Portu aç
 EXPOSE 8080
 
+# Tətbiqi başlat
 ENTRYPOINT ["java", "-jar", "app.jar"]

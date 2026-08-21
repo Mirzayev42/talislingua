@@ -35,10 +35,7 @@ public class WordController {
         return ResponseEntity.ok(wordService.searchWord(query));
     }
 
-    /**
-     * Günün sözünü gətirmək üçün endpoint.
-     * GET /api/v1/words/day
-     */
+
     @GetMapping("/day")
     public ResponseEntity<Word> getWordOfDay() {
         return ResponseEntity.ok(wordService.getWordOfDay());
