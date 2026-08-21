@@ -1,5 +1,5 @@
-# Java 17 mühiti - Yenilənmiş obraz
-FROM eclipse-temurin:17-jdk-slim
+# Java 17 mühiti - Düzəldilmiş obraz
+FROM eclipse-temurin:17-jdk
 
 # İşçi qovluğunu təyin et
 WORKDIR /app
