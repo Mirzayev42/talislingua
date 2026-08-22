@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  dictionary-app:
+    build: .
+    container_name: dictionary-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/talislingua_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=rasif1103!
+      - UNSPLASH_ACCESS_KEY=L2nkNANBwps0OHTcVOkmwC5pTWO7q9ok_atwDg2v8Pw
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: talislingua_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: rasif1103!
+    ports:
+      - "5432:5432"
