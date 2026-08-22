@@ -2,6 +2,8 @@
 FROM eclipse-temurin:17-jdk AS build
 WORKDIR /app
 COPY . .
+# gradlew faylına icra hüququ veririk
+RUN chmod +x gradlew
 RUN ./gradlew bootJar --no-daemon
 
 # Çalışdırma mərhələsi
